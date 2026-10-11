@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle de Gastos Mensal</title>
+  <style>/* Reset básico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Fonte grande e legível */
+body {
+  font-family: system-ui, sans-serif;
+  font-size: 1.25rem; /* 20px base */
+  line-height: 1.6;
+  background: #f5f5f5;
+  color: #333;
+  padding: 1rem;
+}
+
+/* Container centralizado */
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Títulos */
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #2c3e50;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 1.5rem 0 1rem;
+  color: #2c3e50;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+/* Formulário */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.campo label {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.campo input,
+.campo select {
+  font-size: 1.1rem;
+  padding: 0.75rem;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.campo input:focus,
+.campo select:focus {
+  border-color: #3498db;
+}
+
+button {
+  font-size: 1.1rem;
+  padding: 0.875rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+#btn-adicionar {
+  background: #27ae60;
+  color: white;
+  margin-top: 0.5rem;
+}
+
+#btn-adicionar:hover {
+  opacity: 0.9;
+}
+
+/* Lista de gastos */
+#lista-gastos {
+  list-style: none;
+}
+
+#lista-gastos li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+#lista-gastos li:last-child {
+  border-bottom: none;
+}
+
+.gasto-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.gasto-descricao {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.gasto-categoria {
+  font-size: 0.9rem;
+  color: #666;
+  text-transform: capitalize;
+}
+
+.gasto-valor {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #c0392b;
+  white-space: nowrap;
+}
+
+.gasto-valor.entrada {
+  color: #27ae60;
+}
+
+.btn-excluir {
+  background: #e74c3c;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.btn-excluir:hover {
+  opacity: 0.9;
+}
+
+/* Totais */
+#totais {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #eee;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  font-size: 1.2rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.total:last-child {
+  border-top: 1px solid #eee;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+}
+
+#total-valor {
+  font-size: 1.5rem;
+  color: #c0392b;
+}
+
+#total-categorias {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.cat-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.cat-total:last-child {
+  border-bottom: none;
+}
+
+/* Botões de ação */
+#acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #eee;
+}
+
+#acoes button {
+  flex: 1;
+  min-width: 140px;
+  padding: 0.875rem;
+}
+
+#btn-exportar {
+  background: #3498db;
+  color: white;
+}
+
+#btn-importar {
+  background: #f39c12;
+  color: white;
+}
+
+#btn-apagar {
+  background: #e74c3c;
+  color: white;
+}
+
+#acoes button:hover {
+  opacity: 0.9;
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+  body {
+    font-size: 1.1rem;
+    padding: 0.5rem;
+  }
+
+  .container {
+    padding: 1rem;
+    border-radius: 0;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  .campo input,
+  .campo select,
+  button {
+    font-size: 1rem;
+    padding: 0.875rem;
+  }
+
+  #lista-gastos li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gasto-valor {
+    align-self: flex-end;
+  }
+
+  .total {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  #acoes {
+    flex-direction: column;
+  }
+
+  #acoes button {
+    width: 100%;
+  }
+}
+/* BAIXAR_PDF */
+@media print{button,.no-print,form,input,select{display:none!important}body{background:#fff;color:#000}}
+</style>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0a7a4b"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body>
+  <main class="container">
+    <h1>Controle de Gastos Mensal</h1>
+
+    <!-- Formulário de entrada -->
+    <form id="form-gasto">
+      <div class="campo">
+        <label for="descricao">Descrição</label>
+        <input type="text" id="descricao" required placeholder="Ex: Supermercado">
+      </div>
+      <div class="campo">
+        <label for="valor">Valor (R$)</label>
+        <input type="number" id="valor" step="0.01" min="0.01" required placeholder="0,00">
+      </div>
+      <div class="campo">
+        <label for="categoria">Categoria</label>
+        <select id="categoria" required>
+          <option value="">Selecione</option>
+          <option value="alimentacao">Alimentação</option>
+          <option value="transporte">Transporte</option>
+          <option value="lazer">Lazer</option>
+          <option value="outros">Outros</option>
+        </select>
+      </div>
+      <button type="submit" id="btn-adicionar">Adicionar</button>
+    </form>
+
+    <!-- Lista de gastos -->
+    <section id="lista-section">
+      <h2>Gastos do Mês</h2>
+      <ul id="lista-gastos"></ul>
+    </section>
+
+    <!-- Totais -->
+    <section id="totais">
+      <div class="total">
+        <span>Total Gasto:</span>
+        <strong id="total-valor">R$ 0,00</strong>
+      </div>
+      <div class="total">
+        <span>Por Categoria:</span>
+        <div id="total-categorias"></div>
+      </div>
+    </section>
+
+    <!-- Botões de ação -->
+    <div id="acoes">
+      <button id="btn-exportar" type="button">Exportar JSON</button>
+      <button id="btn-importar" type="button">Importar JSON</button>
+      <input type="file" id="input-importar" accept=".json" hidden>
+      <button id="btn-apagar" type="button">Apagar Tudo</button>
+    </div>
+  </main>
+
+  <script>// Controle de Gastos Mensal - Lógica principal
+
+const STORAGE_KEY = 'gastos_mensais';
+const form = document.getElementById('form-gasto');
+const lista = document.getElementById('lista-gastos');
+const totalValor = document.getElementById('total-valor');
+const totalCategorias = document.getElementById('total-categorias');
+const btnExportar = document.getElementById('btn-exportar');
+const btnImportar = document.getElementById('btn-importar');
+const inputImportar = document.getElementById('input-importar');
+const btnApagar = document.getElementById('btn-apagar');
+
+// Carrega gastos do localStorage
+function carregarGastos() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+}
+
+// Salva gastos no localStorage
+function salvarGastos(gastos) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(gastos));
+}
+
+// Formata valor para moeda brasileira
+function formatarMoeda(valor) {
+  return 'R$ ' + valor.toFixed(2).replace('.', ',');
+}
+
+// Atualiza a lista e totais na tela
+function atualizarTela() {
+  const gastos = carregarGastos();
+  lista.innerHTML = '';
+  
+  let total = 0;
+  const categorias = { alimentacao: 0, transporte: 0, lazer: 0, outros: 0 };
+  
+  gastos.forEach((gasto, index) => {
+    total += gasto.valor;
+    categorias[gasto.categoria] += gasto.valor;
+    
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <span>${gasto.descricao} - ${formatarMoeda(gasto.valor)} (${gasto.categoria})</span>
+      <button onclick="removerGasto(${index})">✕</button>
+    `;
+    lista.appendChild(li);
+  });
+  
+  totalValor.textContent = formatarMoeda(total);
+  
+  totalCategorias.innerHTML = Object.entries(categorias)
+    .filter(([_, v]) => v > 0)
+    .map(([cat, val]) => `<span>${cat}: ${formatarMoeda(val)}</span>`)
+    .join(' | ') || 'Nenhum gasto';
+}
+
+// Adiciona gasto
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const gastos = carregarGastos();
+  gastos.push({
+    descricao: document.getElementById('descricao').value,
+    valor: parseFloat(document.getElementById('valor').value),
+    categoria: document.getElementById('categoria').value
+  });
+  salvarGastos(gastos);
+  form.reset();
+  atualizarTela();
+});
+
+// Remove gasto pelo índice
+window.removerGasto = index => {
+  const gastos = carregarGastos();
+  gastos.splice(index, 1);
+  salvarGastos(gastos);
+  atualizarTela();
+};
+
+// Exporta para JSON
+btnExportar.addEventListener('click', () => {
+  const dados = carregarGastos();
+  const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'gastos-mensais.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// Importa JSON
+btnImportar.addEventListener('click', () => inputImportar.click());
+inputImportar.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const dados = JSON.parse(ev.target.result);
+      if (Array.isArray(dados)) {
+        salvarGastos(dados);
+        atualizarTela();
+        alert('Importado com sucesso!');
+      } else throw new Error();
+    } catch {
+      alert('Arquivo JSON inválido!');
+    }
+    inputImportar.value = '';
+  };
+  reader.readAsText(file);
+});
+
+// Apaga tudo com confirmação
+btnApagar.addEventListener('click', () => {
+  if (confirm('Tem certeza que deseja apagar TODOS os gastos?')) {
+    localStorage.removeItem(STORAGE_KEY);
+    atualizarTela();
+  }
+});
+
+// Inicializa
+atualizarTela();
+/* BAIXAR_PDF: abre "Salvar como PDF" do navegador (offline) */
+(function(){var b=document.createElement('button');b.textContent='Baixar PDF';b.className='no-print';
+b.onclick=function(){var t=document.title;document.title=t+'-'+new Date().toISOString().slice(0,10);window.print();document.title=t;};
+document.body.insertBefore(b,document.body.firstChild);})();
+</script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js')</script></body>
+</html>
